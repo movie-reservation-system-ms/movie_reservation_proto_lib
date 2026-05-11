@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package shedule_service.show_status;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/schedule_service/;show_status";
+
+/*
+|--------------------------------------------------------------------------
+| Show Status
+|--------------------------------------------------------------------------
+*/
+enum ShowStatus {
+  SHOW_STATUS_UNSPECIFIED = 0;
+  SHOW_STATUS_SCHEDULED = 1;
+  SHOW_STATUS_RUNNING = 2;
+  SHOW_STATUS_COMPLETED = 3;
+  SHOW_STATUS_CANCELLED = 4;
+}

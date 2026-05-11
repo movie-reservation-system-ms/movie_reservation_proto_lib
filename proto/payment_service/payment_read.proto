@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package payment_service.read;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/payment_service/read;payment_read";
+
+import "google/protobuf/timestamp.proto";
+import "payment_service/payment_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Payment Read Service
+|--------------------------------------------------------------------------
+|
+| Read-only APIs for payment management system.
+|
+| Responsibilities:
+| - Fetch payment details
+| - Fetch payment status
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| GET /payments/{id}
+|
+|--------------------------------------------------------------------------
+*/
+
+service PaymentReadService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Payment By ID
+  |--------------------------------------------------------------------------
+  |
+  | Fetch payment details and status.
+  |
+  | REST:
+  | GET /payments/{id}
+  |
+  */
+  rpc GetPaymentById(GetPaymentByIdRequest) returns (GetPaymentByIdResponse);
+}
+/*
+|--------------------------------------------------------------------------
+| Payment Entity
+|--------------------------------------------------------------------------
+*/
+message Payment {
+
+  // Payment identifier
+  string payment_id = 1;
+
+  // Booking identifier
+  string booking_id = 2;
+
+  // User identifier
+  string user_id = 3;
+
+  // Payment amount
+  double amount = 4;
+
+  // Currency
+  //
+  // Example:
+  // INR
+  // USD
+  string currency = 5;
+
+  // Payment provider
+  //
+  // Example:
+  // Razorpay
+  // Stripe
+  // PayPal
+  string provider = 6;
+
+  // Provider transaction identifier
+  string transaction_id = 7;
+
+  // Current payment status
+  payment_service.status.PaymentStatus status = 8;
+
+  // Payment creation timestamp
+  google.protobuf.Timestamp created_at = 9;
+
+  // Payment update timestamp
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Payment By ID
+|--------------------------------------------------------------------------
+*/
+
+message GetPaymentByIdRequest {
+
+  // Payment identifier
+  string payment_id = 1;
+}
+
+message GetPaymentByIdResponse {
+
+  // Payment entity
+  Payment payment = 1;
+}

@@ -1,0 +1,231 @@
+syntax = "proto3";
+
+package booking_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/booking_service/write;booking_write";
+
+import "google/protobuf/timestamp.proto";
+import "booking_service/booking_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Booking Write Service
+|--------------------------------------------------------------------------
+|
+| High-level orchestration APIs for booking workflow.
+|
+| Responsibilities:
+| - Initiate booking flow
+| - Lock seats temporarily
+| - Confirm booking
+| - Cancel booking
+|
+| Authentication:
+| - Internal gateway authentication via gRPC metadata
+| - Added by API Gateway
+|
+| Required Metadata:
+|
+| x-signature:
+|   HMAC SHA256 signature
+|   Format:
+|   HMAC(user-id + role + timestamp + secret)
+|
+| x-user-id:
+|   User identifier
+|   Format: UUID v7
+|
+| x-user-role:
+|   Roles:
+|   - user
+|   - admin
+|   - service
+|
+| x-timestamp:
+|   Unix timestamp string
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST /booking/initiate
+| POST /booking/lock-seats
+| POST /booking/confirm
+| POST /booking/cancel
+|
+|--------------------------------------------------------------------------
+*/
+
+service BookingWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Initiate Booking
+  |--------------------------------------------------------------------------
+  |
+  | Starts booking workflow.
+  |
+  | Validations:
+  | - Movie exists
+  | - Schedule exists
+  | - Seats available
+  |
+  | REST:
+  | POST /booking/initiate
+  |
+  */
+  rpc InitiateBooking(InitiateBookingRequest) returns (InitiateBookingResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Lock Seats
+  |--------------------------------------------------------------------------
+  |
+  | Temporarily locks seats before payment.
+  |
+  | REST:
+  | POST /booking/lock-seats
+  |
+  */
+  rpc LockSeats(LockSeatsRequest) returns (LockSeatsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Confirm Booking
+  |--------------------------------------------------------------------------
+  |
+  | Confirms booking after successful payment.
+  |
+  | REST:
+  | POST /booking/confirm
+  |
+  */
+  rpc ConfirmBooking(ConfirmBookingRequest) returns (ConfirmBookingResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Cancel Booking
+  |--------------------------------------------------------------------------
+  |
+  | Cancels existing booking.
+  |
+  | REST:
+  | POST /booking/cancel
+  |
+  */
+  rpc CancelBooking(CancelBookingRequest) returns (CancelBookingResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Initiate Booking
+|--------------------------------------------------------------------------
+*/
+
+message InitiateBookingRequest {
+
+  // Movie identifier
+  string movie_id = 1;
+
+  // Theatre identifier
+  string theatre_id = 2;
+
+  // Schedule identifier
+  string schedule_id = 3;
+
+  // Requested seat identifiers
+  repeated string seat_ids = 4;
+}
+
+message InitiateBookingResponse {
+
+  // Temporary booking identifier
+  string booking_id = 1;
+
+  // Booking status
+  booking_service.status.BookingStatus status = 2;
+
+  // Seat lock expiration timestamp
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Lock Seats
+|--------------------------------------------------------------------------
+*/
+
+message LockSeatsRequest {
+
+  // Booking identifier
+  string booking_id = 1;
+
+  // Seat identifiers
+  repeated string seat_ids = 2;
+}
+
+message LockSeatsResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Booking status
+  booking_service.status.BookingStatus status = 2;
+
+  // Seat lock expiration timestamp
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Confirm Booking
+|--------------------------------------------------------------------------
+*/
+
+message ConfirmBookingRequest {
+
+  // Booking identifier
+  string booking_id = 1;
+
+  // Payment transaction identifier
+  string payment_id = 2;
+}
+
+message ConfirmBookingResponse {
+
+  // Booking identifier
+  string booking_id = 1;
+
+  // Booking status
+  booking_service.status.BookingStatus status = 2;
+
+  // Confirmation timestamp
+  google.protobuf.Timestamp confirmed_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Cancel Booking
+|--------------------------------------------------------------------------
+*/
+
+message CancelBookingRequest {
+
+  // Booking identifier
+  string booking_id = 1;
+
+  // Cancellation reason
+  optional string reason = 2;
+}
+
+message CancelBookingResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Booking status
+  booking_service.status.BookingStatus status = 2;
+
+  // Cancellation timestamp
+  google.protobuf.Timestamp cancelled_at = 3;
+}

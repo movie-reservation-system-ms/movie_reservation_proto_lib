@@ -1,0 +1,252 @@
+syntax = "proto3";
+
+package schedule_service.read;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/schedule_service/read;schedule_read";
+
+import "google/protobuf/timestamp.proto";
+import "shedule_service/show_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Schedule Read Service
+|--------------------------------------------------------------------------
+|
+| Read-only APIs for show/schedule management system.
+|
+| Responsibilities:
+| - Fetch shows
+| - Fetch show details
+| - Fetch movie shows
+| - Fetch theatre shows
+| - Fetch shows by date
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| GET /shows
+| GET /shows/{id}
+| GET /movies/{id}/shows
+| GET /theatres/{id}/shows
+| GET /shows?date=YYYY-MM-DD
+|
+|--------------------------------------------------------------------------
+*/
+
+service ScheduleReadService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Shows
+  |--------------------------------------------------------------------------
+  |
+  | Fetch all available shows.
+  |
+  | REST:
+  | GET /shows
+  |
+  */
+  rpc GetShows(GetShowsRequest) returns (GetShowsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Show By ID
+  |--------------------------------------------------------------------------
+  |
+  | Fetch single show details.
+  |
+  | REST:
+  | GET /shows/{id}
+  |
+  */
+  rpc GetShowById(GetShowByIdRequest) returns (GetShowByIdResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Movie Shows
+  |--------------------------------------------------------------------------
+  |
+  | Fetch all shows for movie.
+  |
+  | REST:
+  | GET /movies/{id}/shows
+  |
+  */
+  rpc GetMovieShows(GetMovieShowsRequest) returns (GetMovieShowsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Theatre Shows
+  |--------------------------------------------------------------------------
+  |
+  | Fetch all shows for theatre.
+  |
+  | REST:
+  | GET /theatres/{id}/shows
+  |
+  */
+  rpc GetTheatreShows(GetTheatreShowsRequest) returns (GetTheatreShowsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Shows By Date
+  |--------------------------------------------------------------------------
+  |
+  | Fetch shows by date.
+  |
+  | REST:
+  | GET /shows?date=YYYY-MM-DD
+  |
+  */
+  rpc GetShowsByDate(GetShowsByDateRequest) returns (GetShowsByDateResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Show Entity
+|--------------------------------------------------------------------------
+*/
+message Show {
+
+  // Show identifier
+  string show_id = 1;
+
+  // Movie identifier
+  string movie_id = 2;
+
+  // Theatre identifier
+  string theatre_id = 3;
+
+  // Screen identifier
+  string screen_id = 4;
+
+  // Show start time
+  google.protobuf.Timestamp start_time = 5;
+
+  // Show end time
+  google.protobuf.Timestamp end_time = 6;
+
+  // Ticket price
+  double price = 7;
+
+  // Total seats
+  uint32 total_seats = 8;
+
+  // Available seats
+  uint32 available_seats = 9;
+
+  // Current show status
+  shedule_service.show_status.ShowStatus status = 10;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 11;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Shows
+|--------------------------------------------------------------------------
+*/
+
+message GetShowsRequest {
+
+  // Pagination limit
+  uint32 limit = 1;
+
+  // Pagination offset
+  uint32 offset = 2;
+}
+
+message GetShowsResponse {
+
+  // Show list
+  repeated Show shows = 1;
+
+  // Total records
+  uint64 total = 2;
+
+  // Pagination limit
+  uint32 limit = 3;
+
+  // Pagination offset
+  uint32 offset = 4;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Show By ID
+|--------------------------------------------------------------------------
+*/
+
+message GetShowByIdRequest {
+
+  // Show identifier
+  string show_id = 1;
+}
+
+message GetShowByIdResponse {
+
+  // Show entity
+  Show show = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Movie Shows
+|--------------------------------------------------------------------------
+*/
+
+message GetMovieShowsRequest {
+
+  // Movie identifier
+  string movie_id = 1;
+}
+
+message GetMovieShowsResponse {
+
+  // Show list
+  repeated Show shows = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Theatre Shows
+|--------------------------------------------------------------------------
+*/
+
+message GetTheatreShowsRequest {
+
+  // Theatre identifier
+  string theatre_id = 1;
+}
+
+message GetTheatreShowsResponse {
+
+  // Show list
+  repeated Show shows = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Shows By Date
+|--------------------------------------------------------------------------
+*/
+
+message GetShowsByDateRequest {
+
+  // Date
+  //
+  // Format:
+  // YYYY-MM-DD
+  string date = 1;
+}
+
+message GetShowsByDateResponse {
+
+  // Show list
+  repeated Show shows = 1;
+}

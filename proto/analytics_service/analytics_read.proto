@@ -1,0 +1,330 @@
+syntax = "proto3";
+
+package analytics_service.read;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/analytics_service/read;analytics_read";
+
+import "google/protobuf/timestamp.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Analytics Read Service
+|--------------------------------------------------------------------------
+|
+| Read-only APIs for analytics system.
+|
+| Responsibilities:
+| - Revenue analytics
+| - Booking analytics
+| - Popular movies analytics
+| - Theatre performance analytics
+| - Date range analytics
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| GET /analytics/revenue
+| GET /analytics/bookings
+| GET /analytics/movies/popular
+| GET /analytics/theatres/performance
+| GET /analytics?from=DATE&to=DATE
+|
+|--------------------------------------------------------------------------
+*/
+
+service AnalyticsReadService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Revenue Analytics
+  |--------------------------------------------------------------------------
+  |
+  | Fetch revenue analytics summary.
+  |
+  | REST:
+  | GET /analytics/revenue
+  |
+  */
+  rpc GetRevenueAnalytics(GetRevenueAnalyticsRequest)
+      returns (GetRevenueAnalyticsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Booking Analytics
+  |--------------------------------------------------------------------------
+  |
+  | Fetch booking analytics summary.
+  |
+  | REST:
+  | GET /analytics/bookings
+  |
+  */
+  rpc GetBookingAnalytics(GetBookingAnalyticsRequest)
+      returns (GetBookingAnalyticsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Popular Movies
+  |--------------------------------------------------------------------------
+  |
+  | Fetch most popular movies.
+  |
+  | REST:
+  | GET /analytics/movies/popular
+  |
+  */
+  rpc GetPopularMovies(GetPopularMoviesRequest)
+      returns (GetPopularMoviesResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Theatre Performance
+  |--------------------------------------------------------------------------
+  |
+  | Fetch theatre performance analytics.
+  |
+  | REST:
+  | GET /analytics/theatres/performance
+  |
+  */
+  rpc GetTheatrePerformance(GetTheatrePerformanceRequest)
+      returns (GetTheatrePerformanceResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Analytics By Date Range
+  |--------------------------------------------------------------------------
+  |
+  | Fetch analytics between date range.
+  |
+  | REST:
+  | GET /analytics?from=DATE&to=DATE
+  |
+  */
+  rpc GetAnalyticsByDateRange(GetAnalyticsByDateRangeRequest)
+      returns (GetAnalyticsByDateRangeResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Revenue Analytics
+|--------------------------------------------------------------------------
+*/
+message RevenueAnalytics {
+
+  // Total revenue
+  double total_revenue = 1;
+
+  // Total successful payments
+  uint64 successful_payments = 2;
+
+  // Total refunded amount
+  double refunded_amount = 3;
+
+  // Currency
+  string currency = 4;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Booking Analytics
+|--------------------------------------------------------------------------
+*/
+message BookingAnalytics {
+
+  // Total bookings
+  uint64 total_bookings = 1;
+
+  // Confirmed bookings
+  uint64 confirmed_bookings = 2;
+
+  // Cancelled bookings
+  uint64 cancelled_bookings = 3;
+
+  // Failed bookings
+  uint64 failed_bookings = 4;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Popular Movie Entity
+|--------------------------------------------------------------------------
+*/
+message PopularMovie {
+
+  // Movie identifier
+  string movie_id = 1;
+
+  // Movie title
+  string title = 2;
+
+  // Total bookings
+  uint64 bookings = 3;
+
+  // Total revenue
+  double revenue = 4;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Theatre Performance Entity
+|--------------------------------------------------------------------------
+*/
+message TheatrePerformance {
+
+  // Theatre identifier
+  string theatre_id = 1;
+
+  // Theatre name
+  string theatre_name = 2;
+
+  // Total bookings
+  uint64 bookings = 3;
+
+  // Total revenue
+  double revenue = 4;
+
+  // Occupancy percentage
+  double occupancy_rate = 5;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Analytics Summary
+|--------------------------------------------------------------------------
+*/
+message AnalyticsSummary {
+
+  // Total revenue
+  double total_revenue = 1;
+
+  // Total bookings
+  uint64 total_bookings = 2;
+
+  // Total tickets sold
+  uint64 total_tickets_sold = 3;
+
+  // Total cancelled bookings
+  uint64 total_cancelled_bookings = 4;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Revenue Analytics
+|--------------------------------------------------------------------------
+*/
+
+message GetRevenueAnalyticsRequest {
+
+  // From date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string from = 1;
+
+  // To date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string to = 2;
+}
+
+message GetRevenueAnalyticsResponse {
+
+  // Revenue analytics
+  RevenueAnalytics analytics = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Booking Analytics
+|--------------------------------------------------------------------------
+*/
+
+message GetBookingAnalyticsRequest {
+
+  // From date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string from = 1;
+
+  // To date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string to = 2;
+}
+
+message GetBookingAnalyticsResponse {
+
+  // Booking analytics
+  BookingAnalytics analytics = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Popular Movies
+|--------------------------------------------------------------------------
+*/
+
+message GetPopularMoviesRequest {
+
+  // Result limit
+  uint32 limit = 1;
+}
+
+message GetPopularMoviesResponse {
+
+  // Popular movies
+  repeated PopularMovie movies = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Theatre Performance
+|--------------------------------------------------------------------------
+*/
+
+message GetTheatrePerformanceRequest {
+
+  // Result limit
+  uint32 limit = 1;
+}
+
+message GetTheatrePerformanceResponse {
+
+  // Theatre performance list
+  repeated TheatrePerformance theatres = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Analytics By Date Range
+|--------------------------------------------------------------------------
+*/
+
+message GetAnalyticsByDateRangeRequest {
+
+  // From date
+  //
+  // Format:
+  // YYYY-MM-DD
+  string from = 1;
+
+  // To date
+  //
+  // Format:
+  // YYYY-MM-DD
+  string to = 2;
+}
+
+message GetAnalyticsByDateRangeResponse {
+
+  // Analytics summary
+  AnalyticsSummary analytics = 1;
+
+  // Generated timestamp
+  google.protobuf.Timestamp generated_at = 2;
+}

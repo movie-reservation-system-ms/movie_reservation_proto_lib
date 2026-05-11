@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package analytics_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/analytics_service/write;analytics_write";
+
+import "google/protobuf/timestamp.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Analytics Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for analytics system.
+|
+| Responsibilities:
+| - Generate analytics reports
+| - Sync analytics data
+| - Refresh cached analytics
+| - Export analytics reports
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST /analytics/revenue/refresh
+| POST /analytics/bookings/refresh
+| POST /analytics/movies/popular/refresh
+| POST /analytics/theatres/performance/refresh
+| POST /analytics/export
+|
+|--------------------------------------------------------------------------
+*/
+
+service AnalyticsWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Refresh Revenue Analytics
+  |--------------------------------------------------------------------------
+  |
+  | Refresh revenue analytics cache/data.
+  |
+  | REST:
+  | POST /analytics/revenue/refresh
+  |
+  */
+  rpc RefreshRevenueAnalytics(RefreshRevenueAnalyticsRequest)
+      returns (RefreshRevenueAnalyticsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Refresh Booking Analytics
+  |--------------------------------------------------------------------------
+  |
+  | Refresh booking analytics cache/data.
+  |
+  | REST:
+  | POST /analytics/bookings/refresh
+  |
+  */
+  rpc RefreshBookingAnalytics(RefreshBookingAnalyticsRequest)
+      returns (RefreshBookingAnalyticsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Refresh Popular Movies Analytics
+  |--------------------------------------------------------------------------
+  |
+  | Refresh popular movies analytics.
+  |
+  | REST:
+  | POST /analytics/movies/popular/refresh
+  |
+  */
+  rpc RefreshPopularMoviesAnalytics(RefreshPopularMoviesAnalyticsRequest)
+      returns (RefreshPopularMoviesAnalyticsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Refresh Theatre Performance Analytics
+  |--------------------------------------------------------------------------
+  |
+  | Refresh theatre performance analytics.
+  |
+  | REST:
+  | POST /analytics/theatres/performance/refresh
+  |
+  */
+  rpc RefreshTheatrePerformanceAnalytics(
+      RefreshTheatrePerformanceAnalyticsRequest)
+      returns (RefreshTheatrePerformanceAnalyticsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Export Analytics Report
+  |--------------------------------------------------------------------------
+  |
+  | Export analytics report.
+  |
+  | Supported formats:
+  | - PDF
+  | - CSV
+  | - XLSX
+  |
+  | REST:
+  | POST /analytics/export
+  |
+  */
+  rpc ExportAnalyticsReport(ExportAnalyticsReportRequest)
+      returns (ExportAnalyticsReportResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Export Format
+|--------------------------------------------------------------------------
+*/
+enum ExportFormat {
+  EXPORT_FORMAT_UNSPECIFIED = 0;
+  EXPORT_FORMAT_PDF = 1;
+  EXPORT_FORMAT_CSV = 2;
+  EXPORT_FORMAT_XLSX = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Refresh Revenue Analytics
+|--------------------------------------------------------------------------
+*/
+
+message RefreshRevenueAnalyticsRequest {
+
+  // From date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string from = 1;
+
+  // To date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string to = 2;
+}
+
+message RefreshRevenueAnalyticsResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Refresh timestamp
+  google.protobuf.Timestamp refreshed_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Refresh Booking Analytics
+|--------------------------------------------------------------------------
+*/
+
+message RefreshBookingAnalyticsRequest {
+
+  // From date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string from = 1;
+
+  // To date
+  //
+  // Format:
+  // YYYY-MM-DD
+  optional string to = 2;
+}
+
+message RefreshBookingAnalyticsResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Refresh timestamp
+  google.protobuf.Timestamp refreshed_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Refresh Popular Movies Analytics
+|--------------------------------------------------------------------------
+*/
+
+message RefreshPopularMoviesAnalyticsRequest {
+
+  // Result limit
+  uint32 limit = 1;
+}
+
+message RefreshPopularMoviesAnalyticsResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Refresh timestamp
+  google.protobuf.Timestamp refreshed_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Refresh Theatre Performance Analytics
+|--------------------------------------------------------------------------
+*/
+
+message RefreshTheatrePerformanceAnalyticsRequest {
+
+  // Result limit
+  uint32 limit = 1;
+}
+
+message RefreshTheatrePerformanceAnalyticsResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Refresh timestamp
+  google.protobuf.Timestamp refreshed_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Export Analytics Report
+|--------------------------------------------------------------------------
+*/
+
+message ExportAnalyticsReportRequest {
+
+  // From date
+  //
+  // Format:
+  // YYYY-MM-DD
+  string from = 1;
+
+  // To date
+  //
+  // Format:
+  // YYYY-MM-DD
+  string to = 2;
+
+  // Export format
+  ExportFormat format = 3;
+}
+
+message ExportAnalyticsReportResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Export file URL
+  string file_url = 2;
+
+  // Export timestamp
+  google.protobuf.Timestamp exported_at = 3;
+}

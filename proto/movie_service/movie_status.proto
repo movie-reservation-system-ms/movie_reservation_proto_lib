@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package movie_service.status;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/movie_service/;movie_status";
+
+/*
+|--------------------------------------------------------------------------
+| Movie Status
+|--------------------------------------------------------------------------
+*/
+enum MovieStatus {
+  MOVIE_STATUS_UNSPECIFIED = 0;
+  MOVIE_STATUS_UPCOMING = 1;
+  MOVIE_STATUS_RUNNING = 2;
+  MOVIE_STATUS_ENDED = 3;
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package seat_service.status;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/seat_service/;seat_status";
+
+/*
+|--------------------------------------------------------------------------
+| Seat Status
+|--------------------------------------------------------------------------
+*/
+enum SeatStatus {
+  SEAT_STATUS_UNSPECIFIED = 0;
+  SEAT_STATUS_AVAILABLE = 1;
+  SEAT_STATUS_BOOKED = 2;
+  SEAT_STATUS_LOCKED = 3;
+  SEAT_STATUS_BLOCKED = 4;
+}

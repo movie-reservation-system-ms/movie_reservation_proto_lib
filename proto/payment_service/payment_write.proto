@@ -1,0 +1,225 @@
+syntax = "proto3";
+
+package payment_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/payment_service/write;payment_write";
+
+import "google/protobuf/timestamp.proto";
+import "payment_service/payment_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Payment Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for payment management system.
+|
+| Responsibilities:
+| - Initiate payments
+| - Verify payments
+| - Refund payments
+| - Handle payment webhooks
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST /payments
+| POST /payments/{id}/verify
+| POST /payments/{id}/refund
+| POST /webhooks/payment
+|
+|--------------------------------------------------------------------------
+*/
+
+service PaymentWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Initiate Payment
+  |--------------------------------------------------------------------------
+  |
+  | Creates payment request.
+  |
+  | REST:
+  | POST /payments
+  |
+  */
+  rpc InitiatePayment(InitiatePaymentRequest) returns (InitiatePaymentResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Verify Payment
+  |--------------------------------------------------------------------------
+  |
+  | Verifies completed payment.
+  |
+  | REST:
+  | POST /payments/{id}/verify
+  |
+  */
+  rpc VerifyPayment(VerifyPaymentRequest) returns (VerifyPaymentResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Refund Payment
+  |--------------------------------------------------------------------------
+  |
+  | Refunds completed payment.
+  |
+  | REST:
+  | POST /payments/{id}/refund
+  |
+  */
+  rpc RefundPayment(RefundPaymentRequest) returns (RefundPaymentResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Payment Webhook
+  |--------------------------------------------------------------------------
+  |
+  | Handles payment gateway callbacks.
+  |
+  | REST:
+  | POST /webhooks/payment
+  |
+  */
+  rpc HandlePaymentWebhook(HandlePaymentWebhookRequest)
+      returns (HandlePaymentWebhookResponse);
+}
+/*
+|--------------------------------------------------------------------------
+| Initiate Payment
+|--------------------------------------------------------------------------
+*/
+
+message InitiatePaymentRequest {
+
+  // Booking identifier
+  string booking_id = 1;
+
+  // User identifier
+  string user_id = 2;
+
+  // Payment amount
+  double amount = 3;
+
+  // Currency
+  //
+  // Example:
+  // INR
+  string currency = 4;
+
+  // Payment provider
+  //
+  // Example:
+  // Razorpay
+  // Stripe
+  string provider = 5;
+}
+
+message InitiatePaymentResponse {
+
+  // Payment identifier
+  string payment_id = 1;
+
+  // Provider order identifier
+  string provider_order_id = 2;
+
+  // Payment status
+  payment_service.status.PaymentStatus status = 3;
+
+  // Payment URL
+  string payment_url = 4;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 5;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Verify Payment
+|--------------------------------------------------------------------------
+*/
+
+message VerifyPaymentRequest {
+
+  // Payment identifier
+  string payment_id = 1;
+
+  // Provider transaction identifier
+  string transaction_id = 2;
+
+  // Provider signature
+  string signature = 3;
+}
+
+message VerifyPaymentResponse {
+
+  // Payment identifier
+  string payment_id = 1;
+
+  // Payment status
+  payment_service.status.PaymentStatus status = 2;
+
+  // Verification timestamp
+  google.protobuf.Timestamp verified_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Refund Payment
+|--------------------------------------------------------------------------
+*/
+
+message RefundPaymentRequest {
+
+  // Payment identifier
+  string payment_id = 1;
+
+  // Refund reason
+  optional string reason = 2;
+}
+
+message RefundPaymentResponse {
+
+  // Payment identifier
+  string payment_id = 1;
+
+  // Payment status
+  payment_service.status.PaymentStatus status = 2;
+
+  // Refund timestamp
+  google.protobuf.Timestamp refunded_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Payment Webhook
+|--------------------------------------------------------------------------
+*/
+
+message HandlePaymentWebhookRequest {
+
+  // Provider name
+  string provider = 1;
+
+  // Event type
+  //
+  // Example:
+  // payment.success
+  // payment.failed
+  string event = 2;
+
+  // Provider payload
+  string payload = 3;
+
+  // Provider signature
+  string signature = 4;
+}
+
+message HandlePaymentWebhookResponse {
+
+  // Operation result
+  bool success = 1;
+}

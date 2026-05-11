@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+package movie_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/movie_service/write;movie_write";
+
+import "google/protobuf/timestamp.proto";
+import "movie_service/movie_status.proto";
+/*
+|--------------------------------------------------------------------------
+| Movie Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for movie management system.
+|
+| Responsibilities:
+| - Create movies
+| - Update movies
+| - Delete movies
+|
+| Authentication:
+| - Internal gateway authentication via gRPC metadata
+| - Added by API Gateway
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST   /movies
+| PUT    /movies/{id}
+| DELETE /movies/{id}
+|
+|--------------------------------------------------------------------------
+*/
+
+service MovieWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Create Movie
+  |--------------------------------------------------------------------------
+  |
+  | Creates new movie record.
+  |
+  | REST:
+  | POST /movies
+  |
+  */
+  rpc CreateMovie(CreateMovieRequest) returns (CreateMovieResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Update Movie
+  |--------------------------------------------------------------------------
+  |
+  | Updates existing movie details.
+  |
+  | REST:
+  | PUT /movies/{id}
+  |
+  */
+  rpc UpdateMovie(UpdateMovieRequest) returns (UpdateMovieResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete Movie
+  |--------------------------------------------------------------------------
+  |
+  | Deletes movie record.
+  |
+  | REST:
+  | DELETE /movies/{id}
+  |
+  */
+  rpc DeleteMovie(DeleteMovieRequest) returns (DeleteMovieResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Create Movie
+|--------------------------------------------------------------------------
+*/
+
+message CreateMovieRequest {
+
+  // Movie title
+  string title = 1;
+
+  // Movie description
+  string description = 2;
+
+  // Movie language
+  string language = 3;
+
+  // Movie genres
+  repeated string genres = 4;
+
+  // Movie duration in minutes
+  uint32 duration_minutes = 5;
+
+  // Release date
+  google.protobuf.Timestamp release_date = 6;
+
+  // Poster image URL
+  string poster_url = 7;
+
+  // Banner image URL
+  string banner_url = 8;
+
+  // Age rating
+  string age_rating = 9;
+
+  // Initial movie status
+  movie_service.status.MovieStatus status = 10;
+}
+
+message CreateMovieResponse {
+
+  // Created movie identifier
+  string movie_id = 1;
+
+  // Record creation timestamp
+  google.protobuf.Timestamp created_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Update Movie
+|--------------------------------------------------------------------------
+*/
+
+message UpdateMovieRequest {
+
+  // Movie identifier
+  string movie_id = 1;
+
+  // Movie title
+  optional string title = 2;
+
+  // Movie description
+  optional string description = 3;
+
+  // Movie language
+  optional string language = 4;
+
+  // Movie genres
+  repeated string genres = 5;
+
+  // Movie duration in minutes
+  optional uint32 duration_minutes = 6;
+
+  // Release date
+  optional google.protobuf.Timestamp release_date = 7;
+
+  // Poster image URL
+  optional string poster_url = 8;
+
+  // Banner image URL
+  optional string banner_url = 9;
+
+  // Age rating
+  optional string age_rating = 10;
+
+  // Movie status
+  optional movie_service.status.MovieStatus status = 11;
+}
+
+message UpdateMovieResponse {
+
+  // Updated movie identifier
+  string movie_id = 1;
+
+  // Record update timestamp
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Delete Movie
+|--------------------------------------------------------------------------
+*/
+
+message DeleteMovieRequest {
+
+  // Movie identifier
+  string movie_id = 1;
+}
+
+message DeleteMovieResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}

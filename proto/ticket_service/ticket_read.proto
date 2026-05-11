@@ -1,0 +1,153 @@
+syntax = "proto3";
+
+package ticket_service.read;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/ticket_service/read;ticket_read";
+
+import "google/protobuf/timestamp.proto";
+import "ticket_service/ticket_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Ticket Read Service
+|--------------------------------------------------------------------------
+|
+| Read-only APIs for ticket management system.
+|
+| Responsibilities:
+| - Fetch ticket details
+| - Fetch user ticket history
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| GET /tickets/{id}
+| GET /users/{id}/tickets
+|
+|--------------------------------------------------------------------------
+*/
+
+service TicketReadService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Ticket By ID
+  |--------------------------------------------------------------------------
+  |
+  | Fetch single ticket details.
+  |
+  | REST:
+  | GET /tickets/{id}
+  |
+  */
+  rpc GetTicketById(GetTicketByIdRequest) returns (GetTicketByIdResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get User Tickets
+  |--------------------------------------------------------------------------
+  |
+  | Fetch user booking history.
+  |
+  | REST:
+  | GET /users/{id}/tickets
+  |
+  */
+  rpc GetUserTickets(GetUserTicketsRequest) returns (GetUserTicketsResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Ticket Entity
+|--------------------------------------------------------------------------
+*/
+message Ticket {
+
+  // Ticket identifier
+  string ticket_id = 1;
+
+  // Booking identifier
+  string booking_id = 2;
+
+  // User identifier
+  string user_id = 3;
+
+  // Movie identifier
+  string movie_id = 4;
+
+  // Theatre identifier
+  string theatre_id = 5;
+
+  // Show identifier
+  string show_id = 6;
+
+  // Screen identifier
+  string screen_id = 7;
+
+  // Seat identifiers
+  repeated string seat_ids = 8;
+
+  // Total ticket amount
+  double total_amount = 9;
+
+  // Current ticket status
+  ticket_service.status.TicketStatus status = 10;
+
+  // Ticket issue timestamp
+  google.protobuf.Timestamp issued_at = 11;
+
+  // Ticket update timestamp
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Ticket By ID
+|--------------------------------------------------------------------------
+*/
+
+message GetTicketByIdRequest {
+
+  // Ticket identifier
+  string ticket_id = 1;
+}
+
+message GetTicketByIdResponse {
+
+  // Ticket entity
+  Ticket ticket = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get User Tickets
+|--------------------------------------------------------------------------
+*/
+
+message GetUserTicketsRequest {
+
+  // User identifier
+  string user_id = 1;
+
+  // Pagination limit
+  uint32 limit = 2;
+
+  // Pagination offset
+  uint32 offset = 3;
+}
+
+message GetUserTicketsResponse {
+
+  // Ticket list
+  repeated Ticket tickets = 1;
+
+  // Total records
+  uint64 total = 2;
+
+  // Pagination limit
+  uint32 limit = 3;
+
+  // Pagination offset
+  uint32 offset = 4;
+}

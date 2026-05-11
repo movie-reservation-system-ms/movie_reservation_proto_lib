@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ticket_service.status;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/ticket_service/;ticket_status";
+
+/*
+|--------------------------------------------------------------------------
+| Ticket Status
+|--------------------------------------------------------------------------
+*/
+enum TicketStatus {
+  TICKET_STATUS_UNSPECIFIED = 0;
+  TICKET_STATUS_PENDING = 1;
+  TICKET_STATUS_HELD = 2;
+  TICKET_STATUS_CONFIRMED = 3;
+  TICKET_STATUS_CANCELLED = 4;
+  TICKET_STATUS_EXPIRED = 5;
+}

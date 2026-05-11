@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package theatre_service.screen_type;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/theatre_service/;screen_type";
+
+enum ScreenType {
+  IMAX = 0;
+  ThreeD = 1;
+  TwoD = 2;
+}

@@ -1,0 +1,216 @@
+syntax = "proto3";
+
+package theatre_service.read;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/theatre_service/read;theatre_read";
+
+import "google/protobuf/timestamp.proto";
+import "theatre_service/theatre_screen_type.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Theatre Read Service
+|--------------------------------------------------------------------------
+|
+| Read-only APIs for theatre management system.
+|
+| Responsibilities:
+| - Fetch theatres
+| - Fetch theatre details
+| - Fetch theatre screens
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| GET /theatres
+| GET /theatres/{id}
+| GET /theatres/{id}/screens
+|
+|--------------------------------------------------------------------------
+*/
+
+service TheatreReadService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Theatres
+  |--------------------------------------------------------------------------
+  |
+  | Fetch all theatres.
+  |
+  | REST:
+  | GET /theatres
+  |
+  */
+  rpc GetTheatres(GetTheatresRequest) returns (GetTheatresResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Theatre By ID
+  |--------------------------------------------------------------------------
+  |
+  | Fetch single theatre details.
+  |
+  | REST:
+  | GET /theatres/{id}
+  |
+  */
+  rpc GetTheatreById(GetTheatreByIdRequest) returns (GetTheatreByIdResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Theatre Screens
+  |--------------------------------------------------------------------------
+  |
+  | Fetch all screens for theatre.
+  |
+  | REST:
+  | GET /theatres/{id}/screens
+  |
+  */
+  rpc GetTheatreScreens(GetTheatreScreensRequest)
+      returns (GetTheatreScreensResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Theatre Entity
+|--------------------------------------------------------------------------
+*/
+message Theatre {
+
+  // Theatre identifier
+  string theatre_id = 1;
+
+  // Theatre name
+  string name = 2;
+
+  // Theatre description
+  string description = 3;
+
+  // Address line
+  string address = 4;
+
+  // City
+  string city = 5;
+
+  // State
+  string state = 6;
+
+  // Country
+  string country = 7;
+
+  // Postal code
+  string postal_code = 8;
+
+  // Contact number
+  string phone = 9;
+
+  // Theatre email
+  string email = 10;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 11;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Screen Entity
+|--------------------------------------------------------------------------
+*/
+message Screen {
+
+  // Screen identifier
+  string screen_id = 1;
+
+  // Theatre identifier
+  string theatre_id = 2;
+
+  // Screen name
+  string name = 3;
+
+  // Total seats
+  uint32 total_seats = 4;
+
+  // Screen type
+  theatre_service.screen_type.ScreenType screen_type = 5;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 6;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Theatres
+|--------------------------------------------------------------------------
+*/
+
+message GetTheatresRequest {
+
+  // Pagination limit
+  uint32 limit = 1;
+
+  // Pagination offset
+  uint32 offset = 2;
+
+  // Search keyword
+  optional string search = 3;
+
+  // Filter by city
+  optional string city = 4;
+}
+
+message GetTheatresResponse {
+
+  // Theatre list
+  repeated Theatre theatres = 1;
+
+  // Total records
+  uint64 total = 2;
+
+  // Pagination limit
+  uint32 limit = 3;
+
+  // Pagination offset
+  uint32 offset = 4;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Theatre By ID
+|--------------------------------------------------------------------------
+*/
+
+message GetTheatreByIdRequest {
+
+  // Theatre identifier
+  string theatre_id = 1;
+}
+
+message GetTheatreByIdResponse {
+
+  // Theatre entity
+  Theatre theatre = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Theatre Screens
+|--------------------------------------------------------------------------
+*/
+
+message GetTheatreScreensRequest {
+
+  // Theatre identifier
+  string theatre_id = 1;
+}
+
+message GetTheatreScreensResponse {
+
+  // Screen list
+  repeated Screen screens = 1;
+}

@@ -1,0 +1,208 @@
+syntax = "proto3";
+
+package theatre_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/theatre_service/write;theatre_write";
+
+import "google/protobuf/timestamp.proto";
+import "theatre_service/theatre_screen_type.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Theatre Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for theatre management system.
+|
+| Responsibilities:
+| - Create theatres
+| - Update theatres
+| - Delete theatres
+| - Create screens
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST   /theatres
+| PUT    /theatres/{id}
+| DELETE /theatres/{id}
+| POST   /theatres/{id}/screens
+|
+|--------------------------------------------------------------------------
+*/
+
+service TheatreWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Create Theatre
+  |--------------------------------------------------------------------------
+  */
+  rpc CreateTheatre(CreateTheatreRequest) returns (CreateTheatreResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Update Theatre
+  |--------------------------------------------------------------------------
+  */
+  rpc UpdateTheatre(UpdateTheatreRequest) returns (UpdateTheatreResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete Theatre
+  |--------------------------------------------------------------------------
+  */
+  rpc DeleteTheatre(DeleteTheatreRequest) returns (DeleteTheatreResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Create Screen
+  |--------------------------------------------------------------------------
+  */
+  rpc CreateScreen(CreateScreenRequest) returns (CreateScreenResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Create Theatre
+|--------------------------------------------------------------------------
+*/
+
+message CreateTheatreRequest {
+
+  // Theatre name
+  string name = 1;
+
+  // Theatre description
+  string description = 2;
+
+  // Address line
+  string address = 3;
+
+  // City
+  string city = 4;
+
+  // State
+  string state = 5;
+
+  // Country
+  string country = 6;
+
+  // Postal code
+  string postal_code = 7;
+
+  // Contact number
+  string phone = 8;
+
+  // Theatre email
+  string email = 9;
+}
+
+message CreateTheatreResponse {
+
+  // Created theatre identifier
+  string theatre_id = 1;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Update Theatre
+|--------------------------------------------------------------------------
+*/
+
+message UpdateTheatreRequest {
+
+  // Theatre identifier
+  string theatre_id = 1;
+
+  // Theatre name
+  optional string name = 2;
+
+  // Theatre description
+  optional string description = 3;
+
+  // Address line
+  optional string address = 4;
+
+  // City
+  optional string city = 5;
+
+  // State
+  optional string state = 6;
+
+  // Country
+  optional string country = 7;
+
+  // Postal code
+  optional string postal_code = 8;
+
+  // Contact number
+  optional string phone = 9;
+
+  // Theatre email
+  optional string email = 10;
+}
+
+message UpdateTheatreResponse {
+
+  // Updated theatre identifier
+  string theatre_id = 1;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Delete Theatre
+|--------------------------------------------------------------------------
+*/
+
+message DeleteTheatreRequest {
+
+  // Theatre identifier
+  string theatre_id = 1;
+}
+
+message DeleteTheatreResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Create Screen
+|--------------------------------------------------------------------------
+*/
+
+message CreateScreenRequest {
+
+  // Theatre identifier
+  string theatre_id = 1;
+
+  // Screen name
+  string name = 2;
+
+  // Total seats
+  uint32 total_seats = 3;
+
+  // Screen type
+  theatre_service.screen_type.ScreenType screen_type = 4;
+}
+
+message CreateScreenResponse {
+
+  // Created screen identifier
+  string screen_id = 1;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 2;
+}

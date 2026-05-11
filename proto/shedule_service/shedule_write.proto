@@ -1,0 +1,166 @@
+syntax = "proto3";
+
+package schedule_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/schedule_service/write;schedule_write";
+
+import "google/protobuf/timestamp.proto";
+import "shedule_service/show_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Schedule Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for show/schedule management system.
+|
+| Responsibilities:
+| - Create shows
+| - Update shows
+| - Delete shows
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST   /shows
+| PUT    /shows/{id}
+| DELETE /shows/{id}
+|
+|--------------------------------------------------------------------------
+*/
+
+service ScheduleWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Create Show
+  |--------------------------------------------------------------------------
+  |
+  | Create new show schedule.
+  |
+  | REST:
+  | POST /shows
+  |
+  */
+  rpc CreateShow(CreateShowRequest) returns (CreateShowResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Update Show
+  |--------------------------------------------------------------------------
+  |
+  | Update show details.
+  |
+  | REST:
+  | PUT /shows/{id}
+  |
+  */
+  rpc UpdateShow(UpdateShowRequest) returns (UpdateShowResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete Show
+  |--------------------------------------------------------------------------
+  |
+  | Delete show schedule.
+  |
+  | REST:
+  | DELETE /shows/{id}
+  |
+  */
+  rpc DeleteShow(DeleteShowRequest) returns (DeleteShowResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Create Show
+|--------------------------------------------------------------------------
+*/
+
+message CreateShowRequest {
+
+  // Movie identifier
+  string movie_id = 1;
+
+  // Theatre identifier
+  string theatre_id = 2;
+
+  // Screen identifier
+  string screen_id = 3;
+
+  // Show start time
+  google.protobuf.Timestamp start_time = 4;
+
+  // Show end time
+  google.protobuf.Timestamp end_time = 5;
+
+  // Ticket price
+  double price = 6;
+
+  // Total seats
+  uint32 total_seats = 7;
+}
+
+message CreateShowResponse {
+
+  // Created show identifier
+  string show_id = 1;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Update Show
+|--------------------------------------------------------------------------
+*/
+
+message UpdateShowRequest {
+
+  // Show identifier
+  string show_id = 1;
+
+  // Show start time
+  optional google.protobuf.Timestamp start_time = 2;
+
+  // Show end time
+  optional google.protobuf.Timestamp end_time = 3;
+
+  // Ticket price
+  optional double price = 4;
+
+  // Show status
+  optional shedule_service.show_status.ShowStatus status = 5;
+}
+
+message UpdateShowResponse {
+
+  // Updated show identifier
+  string show_id = 1;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Delete Show
+|--------------------------------------------------------------------------
+*/
+
+message DeleteShowRequest {
+
+  // Show identifier
+  string show_id = 1;
+}
+
+message DeleteShowResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}

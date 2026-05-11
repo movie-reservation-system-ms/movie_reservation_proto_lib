@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+package seat_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/seat_service/write;seat_write";
+
+import "google/protobuf/timestamp.proto";
+import "seat_service/seat_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Seat Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for seat management system.
+|
+| Responsibilities:
+| - Create seats
+| - Update seats
+| - Delete seats
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST   /screens/{id}/seats
+| PUT    /seats/{id}
+| DELETE /seats/{id}
+|
+|--------------------------------------------------------------------------
+*/
+
+service SeatWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Create Seat
+  |--------------------------------------------------------------------------
+  |
+  | Create new seat for screen.
+  |
+  | REST:
+  | POST /screens/{id}/seats
+  |
+  */
+  rpc CreateSeat(CreateSeatRequest) returns (CreateSeatResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Update Seat
+  |--------------------------------------------------------------------------
+  |
+  | Update seat details.
+  |
+  | REST:
+  | PUT /seats/{id}
+  |
+  */
+  rpc UpdateSeat(UpdateSeatRequest) returns (UpdateSeatResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete Seat
+  |--------------------------------------------------------------------------
+  |
+  | Delete seat.
+  |
+  | REST:
+  | DELETE /seats/{id}
+  |
+  */
+  rpc DeleteSeat(DeleteSeatRequest) returns (DeleteSeatResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Create Seat
+|--------------------------------------------------------------------------
+*/
+
+message CreateSeatRequest {
+
+  // Screen identifier
+  string screen_id = 1;
+
+  // Seat row
+  string row = 2;
+
+  // Seat number
+  string number = 3;
+
+  // Seat type
+  //
+  // Example:
+  // REGULAR
+  // PREMIUM
+  // VIP
+  string seat_type = 4;
+}
+
+message CreateSeatResponse {
+
+  // Created seat identifier
+  string seat_id = 1;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Update Seat
+|--------------------------------------------------------------------------
+*/
+
+message UpdateSeatRequest {
+
+  // Seat identifier
+  string seat_id = 1;
+
+  // Seat row
+  optional string row = 2;
+
+  // Seat number
+  optional string number = 3;
+
+  // Seat type
+  optional string seat_type = 4;
+
+  // Seat status
+  optional seat_service.status.SeatStatus status = 5;
+}
+
+message UpdateSeatResponse {
+
+  // Updated seat identifier
+  string seat_id = 1;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Delete Seat
+|--------------------------------------------------------------------------
+*/
+
+message DeleteSeatRequest {
+
+  // Seat identifier
+  string seat_id = 1;
+}
+
+message DeleteSeatResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Deletion timestamp
+  google.protobuf.Timestamp deleted_at = 2;
+}

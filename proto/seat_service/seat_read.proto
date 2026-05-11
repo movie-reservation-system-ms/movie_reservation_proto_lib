@@ -1,0 +1,171 @@
+syntax = "proto3";
+
+package seat_service.read;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/seat_service/read;seat_read";
+
+import "google/protobuf/timestamp.proto";
+import "seat_service/seat_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Seat Read Service
+|--------------------------------------------------------------------------
+|
+| Read-only APIs for seat management system.
+|
+| Responsibilities:
+| - Fetch screen seats
+| - Fetch available seats
+| - Fetch booked seats
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| GET /screens/{id}/seats
+| GET /shows/{id}/available-seats
+| GET /shows/{id}/booked-seats
+|
+|--------------------------------------------------------------------------
+*/
+
+service SeatReadService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Screen Seats
+  |--------------------------------------------------------------------------
+  |
+  | Fetch all seats for screen.
+  |
+  | REST:
+  | GET /screens/{id}/seats
+  |
+  */
+  rpc GetScreenSeats(GetScreenSeatsRequest) returns (GetScreenSeatsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Available Seats
+  |--------------------------------------------------------------------------
+  |
+  | Fetch available seats for show.
+  |
+  | REST:
+  | GET /shows/{id}/available-seats
+  |
+  */
+  rpc GetAvailableSeats(GetAvailableSeatsRequest)
+      returns (GetAvailableSeatsResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get Booked Seats
+  |--------------------------------------------------------------------------
+  |
+  | Fetch booked seats for show.
+  |
+  | REST:
+  | GET /shows/{id}/booked-seats
+  |
+  */
+  rpc GetBookedSeats(GetBookedSeatsRequest) returns (GetBookedSeatsResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Seat Entity
+|--------------------------------------------------------------------------
+*/
+message Seat {
+
+  // Seat identifier
+  string seat_id = 1;
+
+  // Screen identifier
+  string screen_id = 2;
+
+  // Seat row
+  //
+  // Example:
+  // A
+  string row = 3;
+
+  // Seat number
+  //
+  // Example:
+  // 12
+  string number = 4;
+
+  // Seat type
+  //
+  // Example:
+  // REGULAR
+  // PREMIUM
+  // VIP
+  string seat_type = 5;
+
+  // Current seat status
+  seat_service.status.SeatStatus status = 6;
+
+  // Creation timestamp
+  google.protobuf.Timestamp created_at = 7;
+
+  // Update timestamp
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Screen Seats
+|--------------------------------------------------------------------------
+*/
+
+message GetScreenSeatsRequest {
+
+  // Screen identifier
+  string screen_id = 1;
+}
+
+message GetScreenSeatsResponse {
+
+  // Seat list
+  repeated Seat seats = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Available Seats
+|--------------------------------------------------------------------------
+*/
+
+message GetAvailableSeatsRequest {
+
+  // Show identifier
+  string show_id = 1;
+}
+
+message GetAvailableSeatsResponse {
+
+  // Available seats
+  repeated Seat seats = 1;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Get Booked Seats
+|--------------------------------------------------------------------------
+*/
+
+message GetBookedSeatsRequest {
+
+  // Show identifier
+  string show_id = 1;
+}
+
+message GetBookedSeatsResponse {
+
+  // Booked seats
+  repeated Seat seats = 1;
+}

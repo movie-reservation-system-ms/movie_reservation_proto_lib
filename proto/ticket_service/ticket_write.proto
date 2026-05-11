@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package ticket_service.write;
+
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/ticket_service/write;ticket_write";
+
+import "google/protobuf/timestamp.proto";
+import "ticket_service/ticket_status.proto";
+
+/*
+|--------------------------------------------------------------------------
+| Ticket Write Service
+|--------------------------------------------------------------------------
+|
+| Write APIs for ticket management system.
+|
+| Responsibilities:
+| - Book tickets
+| - Hold tickets
+| - Confirm tickets
+| - Cancel tickets
+|
+|--------------------------------------------------------------------------
+| REST Reference
+|--------------------------------------------------------------------------
+|
+| POST   /tickets
+| DELETE /tickets/{id}
+| POST   /tickets/{id}/confirm
+| POST   /tickets/{id}/hold
+|
+|--------------------------------------------------------------------------
+*/
+
+service TicketWriteService {
+
+  /*
+  |--------------------------------------------------------------------------
+  | Book Ticket
+  |--------------------------------------------------------------------------
+  |
+  | Creates new ticket booking.
+  |
+  | REST:
+  | POST /tickets
+  |
+  */
+  rpc BookTicket(BookTicketRequest) returns (BookTicketResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Hold Ticket
+  |--------------------------------------------------------------------------
+  |
+  | Temporarily holds ticket seats.
+  |
+  | REST:
+  | POST /tickets/{id}/hold
+  |
+  */
+  rpc HoldTicket(HoldTicketRequest) returns (HoldTicketResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Confirm Ticket
+  |--------------------------------------------------------------------------
+  |
+  | Confirms held ticket.
+  |
+  | REST:
+  | POST /tickets/{id}/confirm
+  |
+  */
+  rpc ConfirmTicket(ConfirmTicketRequest) returns (ConfirmTicketResponse);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Cancel Ticket
+  |--------------------------------------------------------------------------
+  |
+  | Cancels ticket booking.
+  |
+  | REST:
+  | DELETE /tickets/{id}
+  |
+  */
+  rpc CancelTicket(CancelTicketRequest) returns (CancelTicketResponse);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Book Ticket
+|--------------------------------------------------------------------------
+*/
+
+message BookTicketRequest {
+
+  // Booking identifier
+  string booking_id = 1;
+
+  // User identifier
+  string user_id = 2;
+
+  // Show identifier
+  string show_id = 3;
+
+  // Seat identifiers
+  repeated string seat_ids = 4;
+
+  // Total amount
+  double total_amount = 5;
+}
+
+message BookTicketResponse {
+
+  // Created ticket identifier
+  string ticket_id = 1;
+
+  // Ticket status
+  ticket_service.status.TicketStatus status = 2;
+
+  // Ticket creation timestamp
+  google.protobuf.Timestamp created_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Hold Ticket
+|--------------------------------------------------------------------------
+*/
+
+message HoldTicketRequest {
+
+  // Ticket identifier
+  string ticket_id = 1;
+
+  // Hold expiration timestamp
+  google.protobuf.Timestamp expires_at = 2;
+}
+
+message HoldTicketResponse {
+
+  // Ticket identifier
+  string ticket_id = 1;
+
+  // Ticket status
+  ticket_service.status.TicketStatus status = 2;
+
+  // Hold expiration timestamp
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Confirm Ticket
+|--------------------------------------------------------------------------
+*/
+
+message ConfirmTicketRequest {
+
+  // Ticket identifier
+  string ticket_id = 1;
+}
+
+message ConfirmTicketResponse {
+
+  // Ticket identifier
+  string ticket_id = 1;
+
+  // Ticket status
+  ticket_service.status.TicketStatus status = 2;
+
+  // Confirmation timestamp
+  google.protobuf.Timestamp confirmed_at = 3;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Cancel Ticket
+|--------------------------------------------------------------------------
+*/
+
+message CancelTicketRequest {
+
+  // Ticket identifier
+  string ticket_id = 1;
+
+  // Cancellation reason
+  optional string reason = 2;
+}
+
+message CancelTicketResponse {
+
+  // Operation result
+  bool success = 1;
+
+  // Ticket status
+  ticket_service.status.TicketStatus status = 2;
+
+  // Cancellation timestamp
+  google.protobuf.Timestamp cancelled_at = 3;
+}

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package movie_service.status;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/movie_service/;movie_status";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/movie_service/;movie_status";
 
 /*
 |--------------------------------------------------------------------------

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package ticket_service.write;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/ticket_service/write;ticket_write";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/ticket_service/write;ticket_write";
 
 import "google/protobuf/timestamp.proto";
 import "ticket_service/ticket_status.proto";

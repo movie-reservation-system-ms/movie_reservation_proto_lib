@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package payment_service.read;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/payment_service/read;payment_read";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/payment_service/read;payment_read";
 
 import "google/protobuf/timestamp.proto";
 import "payment_service/payment_status.proto";

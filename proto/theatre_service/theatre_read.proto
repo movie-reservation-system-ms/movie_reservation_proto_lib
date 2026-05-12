@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package theatre_service.read;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/theatre_service/read;theatre_read";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/theatre_service/read;theatre_read";
 
 import "google/protobuf/timestamp.proto";
 import "theatre_service/theatre_screen_type.proto";

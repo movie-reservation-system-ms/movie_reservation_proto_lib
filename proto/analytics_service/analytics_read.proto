@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package analytics_service.read;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/analytics_service/read;analytics_read";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/analytics_service/read;analytics_read";
 
 import "google/protobuf/timestamp.proto";
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package schedule_service.read;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/schedule_service/read;schedule_read";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/schedule_service/read;schedule_read";
 
 import "google/protobuf/timestamp.proto";
 import "shedule_service/show_status.proto";

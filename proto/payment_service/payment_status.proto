@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package payment_service.status;
 
-option go_package = "github.com/movie-reservation-system-ms/movie_reservation_proto_lib/payment_service/;payment_status";
+option go_package = "github.com/movie-reservation-system-ms/movie_reservation/payment_service/;payment_status";
 
 /*
 |--------------------------------------------------------------------------
